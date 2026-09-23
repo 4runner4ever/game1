@@ -3673,7 +3673,10 @@ function onPlayerDeath(){
   if(runKills > state.bestKills){ state.bestKills = runKills; saveBestKills(); }
   if(wave > (state.bestWave||0)){ state.bestWave = wave; saveLifetimeStats(); }
   const prevLevel = levelFromXP(state.xp);
-  
+  const xpGained = Math.floor(score);
+  state.xp += xpGained; saveXP();
+  const newLevel = levelFromXP(state.xp);
+
   state.runHistory.unshift({
     score: Math.floor(score), wave, kills: runKills, gold: runGold,
     date: Date.now(), className: (CLASSES[state.charClass]||CLASSES.survivor).name,
