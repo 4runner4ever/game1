@@ -3683,10 +3683,6 @@ function onPlayerDeath(){
   saveRunHistory();
   checkAchievements();
   document.getElementById('goSubtitle').textContent = (state.username||'Survivor')+' — culled on wave '+wave;
-  document.getElementById('goScore').textContent = Math.floor(score);
-  const bestEl = document.getElementById('goBest');
-  bestEl.textContent = state.bestKills;
-  bestEl.classList.toggle('newbest', runKills > prevBestKills);
   document.getElementById('goKills').textContent = runKills;
   document.getElementById('goGold').textContent = runGold;
   const xpLine = document.getElementById('goXpLine');
