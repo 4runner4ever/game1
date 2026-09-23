@@ -3667,17 +3667,13 @@ function resumeGame(){ game='playing'; showScreen(null); document.getElementById
 function onPlayerDeath(){
   game='gameover';
   SFX.death(); SFX.gameover();
+  const beat = score>state.highscore;
+  if(beat){ state.highscore = Math.floor(score); saveHigh(); }
   const prevBestKills = state.bestKills;
   if(runKills > state.bestKills){ state.bestKills = runKills; saveBestKills(); }
-  const prevBestKills = state.bestKills;
-  if(runKills > state.bestKills){ state.bestKills = runKills; saveBestKills(); }
-  if(wave > (state.bestWave||0)){ state.bestWave = wave; saveLifetimeStats(); }
   if(wave > (state.bestWave||0)){ state.bestWave = wave; saveLifetimeStats(); }
   const prevLevel = levelFromXP(state.xp);
-  const xpGained = Math.floor(score);
-  state.xp += xpGained; saveXP();
-  const newLevel = levelFromXP(state.xp);
-
+  
   state.runHistory.unshift({
     score: Math.floor(score), wave, kills: runKills, gold: runGold,
     date: Date.now(), className: (CLASSES[state.charClass]||CLASSES.survivor).name,
@@ -3688,8 +3684,8 @@ function onPlayerDeath(){
   document.getElementById('goSubtitle').textContent = (state.username||'Survivor')+' — culled on wave '+wave;
   document.getElementById('goScore').textContent = Math.floor(score);
   const bestEl = document.getElementById('goBest');
-  bestEl.textContent = state.highscore;
-  bestEl.classList.toggle('newbest', beat);
+  bestEl.textContent = state.bestKills;
+  bestEl.classList.toggle('newbest', runKills > prevBestKills);
   document.getElementById('goKills').textContent = runKills;
   document.getElementById('goGold').textContent = runGold;
   const xpLine = document.getElementById('goXpLine');
