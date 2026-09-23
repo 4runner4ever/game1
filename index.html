@@ -1619,6 +1619,7 @@ function killEnemy(enemy){
   spawnGroundBlood(enemy.x, enemy.y, 9, 22);
   if(Math.random()<0.05) spawnHealthPickup(enemy.x, enemy.y);
   if(Math.random()<0.12) spawnAmmoPickup(enemy.x, enemy.y);
+  if(Math.random()<0.50) spawnPowerup(enemy.x, enemy.y);
   const diffMult = (DIFFICULTIES[state.difficulty]||DIFFICULTIES.normal).goldMult;
   const goldAmt = Math.max(1, Math.round(randInt(enemy.type.goldMin, enemy.type.goldMax)*diffMult));
   const coinCount = Math.max(1, Math.min(3, Math.round(goldAmt/2)));
@@ -2289,10 +2290,17 @@ function pickRandomArenaPoint(){
   do{ x=rand(120,WORLD_W-120); y=rand(120,WORLD_H-120); tries++; } while(pointInObstacle(x,y,30) && tries<20);
   return {x,y};
 }
-function spawnPowerup(){
+function spawnPowerup(x, y){
   const type = choice(POWERUP_ORDER);
-  const p = pickRandomArenaPoint();
-  powerups.push({ x:p.x, y:p.y, type, life:14, maxLife:14, phase:rand(0,6.28) });
+  let px, py;
+  if(x===undefined){
+    const p = pickRandomArenaPoint();
+    px = p.x; py = p.y;
+  } else {
+    px = x + rand(-16,16);
+    py = y + rand(-16,16);
+  }
+  powerups.push({ x:px, y:py, type, life:14, maxLife:14, phase:rand(0,6.28) });
 }
 function applyPowerup(type){
   const def = POWERUP_TYPES[type];
@@ -2314,8 +2322,6 @@ function applyPowerup(type){
   }
 }
 function updatePowerups(dt){
-  powerupSpawnTimer -= dt;
-  if(powerupSpawnTimer<=0){ spawnPowerup(); powerupSpawnTimer = rand(20,30); }
   for(let i=powerups.length-1;i>=0;i--){
     const pu = powerups[i];
     pu.life -= dt;
