@@ -378,7 +378,7 @@
 <div class="screen show" id="menu-screen">
   <div class="panel">
     <h1 class="title display">ZONBI KILLERZ 2026</span></h1>
-    <div class="subtitle">a top-down slasher</div>
+    <div class="subtitle">FUCKIN ZONBIS...</div>
     <div class="greeting" id="menuGreeting">Welcome back, Survivor</div>
     <div class="level-row">
       <div class="level-badge" id="menuLevelBadge">1</div>
@@ -1864,8 +1864,8 @@ function updateCombat(dt){
         player.attackTimer = 0.22;
         SFX.dryfire();
         if(player.emptyBarkTimer<=0){
-          if(player.reserveAmmo>0) spawnPlayerBark('OUT OF AMMO! PRESS R', '#ff8f8f');
-          else spawnPlayerBark('NO AMMO LEFT!', '#ff5c5c');
+          if(player.reserveAmmo>0) spawnPlayerBark('RELOAD MOTHERFUCKER!', '#ff8f8f');
+          else spawnPlayerBark('NO MORE BULLETS!', '#ff5c5c');
           player.emptyBarkTimer = 1.3;
         }
       }
