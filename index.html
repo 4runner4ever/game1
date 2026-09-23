@@ -3682,7 +3682,7 @@ function onPlayerDeath(){
   state.runHistory = state.runHistory.slice(0,12);
   saveRunHistory();
   checkAchievements();
-  document.getElementById('goSubtitle').textContent = (state.username||'Survivor')+' — culled on wave '+wave;
+  document.getElementById('goSubtitle').textContent = (state.username||'Survivor')+' — slimed tf out on wave '+wave;
   document.getElementById('goKills').textContent = runKills;
   document.getElementById('goGold').textContent = runGold;
   const xpLine = document.getElementById('goXpLine');
