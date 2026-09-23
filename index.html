@@ -389,7 +389,7 @@
     </div>
     <div class="menu-stats">
       <div class="menu-stat"><div class="num" id="menuGold">0</div><div class="lbl">Gold banked</div></div>
-      <div class="menu-stat"><div class="num" id="menuHigh">0</div><div class="lbl">Best score</div></div>
+      <div class="menu-stat"><div class="num" id="menuHigh">0</div><div class="lbl">Most kills</div></div>
     </div>
     <div class="field-label" style="text-align:center;">Medals</div>
     <div class="menu-medals" id="menuMedals"></div>
@@ -455,7 +455,7 @@
     <div class="subtitle" id="goSubtitle">DED on wave 1</div>
     <div class="go-stats">
       <div class="go-stat"><div class="num" id="goScore">0</div><div class="lbl">Score</div></div>
-      <div class="go-stat"><div class="num" id="goBest">0</div><div class="lbl">Best score</div></div>
+      <div class="go-stat"><div class="num" id="goBest">0</div><div class="lbl">Most kills</div></div>
       <div class="go-stat"><div class="num" id="goKills">0</div><div class="lbl">Kills</div></div>
       <div class="go-stat"><div class="num" id="goGold">0</div><div class="lbl">Gold earned</div></div>
     </div>
@@ -679,6 +679,7 @@ function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
 const state = {
   gold: parseInt(lsGet('culled_gold','0'),10) || 0,
   highscore: parseInt(lsGet('culled_highscore','0'),10) || 0,
+  bestKills: parseInt(lsGet('culled_best_kills','0'),10) || 0,
   unlockedWeapons: JSON.parse(lsGet('culled_unlocked_weapons','["bat"]')),
   unlockedArmor: JSON.parse(lsGet('culled_unlocked_armor','["none"]')),
   equippedWeapon: lsGet('culled_equipped_weapon','bat'),
@@ -715,6 +716,7 @@ if(state.weaponMods && state.weaponMods.pistol){
 }
 function saveGold(){ lsSet('culled_gold', String(state.gold)); }
 function saveHigh(){ lsSet('culled_highscore', String(state.highscore)); }
+function saveBestKills(){ lsSet('culled_best_kills', String(state.bestKills)); }
 function saveUnlocks(){
   lsSet('culled_unlocked_weapons', JSON.stringify(state.unlockedWeapons));
   lsSet('culled_unlocked_armor', JSON.stringify(state.unlockedArmor));
@@ -3569,7 +3571,7 @@ function renderDifficultyRow(){
 function goToMenu(){
   game='menu';
   document.getElementById('menuGold').textContent = state.gold;
-  document.getElementById('menuHigh').textContent = state.highscore;
+  document.getElementById('menuHigh').textContent = state.bestKills;
   document.getElementById('menuGreeting').textContent = 'Welcome back, '+(state.username||'Survivor');
   const prog = xpProgress(state.xp);
   document.getElementById('menuLevelBadge').textContent = prog.level;
@@ -3665,8 +3667,11 @@ function resumeGame(){ game='playing'; showScreen(null); document.getElementById
 function onPlayerDeath(){
   game='gameover';
   SFX.death(); SFX.gameover();
-  const beat = score>state.highscore;
-  if(beat){ state.highscore = Math.floor(score); saveHigh(); }
+  const prevBestKills = state.bestKills;
+  if(runKills > state.bestKills){ state.bestKills = runKills; saveBestKills(); }
+  const prevBestKills = state.bestKills;
+  if(runKills > state.bestKills){ state.bestKills = runKills; saveBestKills(); }
+  if(wave > (state.bestWave||0)){ state.bestWave = wave; saveLifetimeStats(); }
   if(wave > (state.bestWave||0)){ state.bestWave = wave; saveLifetimeStats(); }
   const prevLevel = levelFromXP(state.xp);
   const xpGained = Math.floor(score);
